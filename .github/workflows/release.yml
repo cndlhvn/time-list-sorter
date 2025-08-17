@@ -36,6 +36,17 @@ jobs:
             main.js \
             manifest.json
 
+    - name: Update release branch
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        
+        # Create or update release branch
+        git checkout -B release
+        git add main.js manifest.json -f
+        git commit -m "Release ${GITHUB_REF#refs/tags/}: Update build files"
+        git push origin release --force
+
   # プロダクション用の追加ジョブ：サイズチェックとテスト
   validate:
     runs-on: ubuntu-latest

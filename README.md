@@ -46,7 +46,20 @@
 
 ## インストール方法
 
-### GitHub Releasesから（推奨）
+### Git cloneから（最も簡単）
+
+1. Obsidianのプラグインフォルダに直接cloneする:
+   ```bash
+   # プラグインフォルダに移動
+   cd "[ボルトフォルダ]/.obsidian/plugins"
+   
+   # releaseブランチをclone
+   git clone -b release https://github.com/cndlhvn/time-list-sorter.git
+   ```
+
+2. Obsidianを再起動してプラグインを有効化
+
+### GitHub Releasesから
 
 1. [Releases](https://github.com/cndlhvn/time-list-sorter/releases) ページから最新版をダウンロード
 2. リリースページから `main.js` と `manifest.json` をダウンロード
