@@ -46,7 +46,18 @@
 
 ## インストール方法
 
-### 手動インストール
+### GitHub Releasesから（推奨）
+
+1. [Releases](https://github.com/cndlhvn/time-list-sorter/releases) ページから最新版をダウンロード
+2. リリースページから `main.js` と `manifest.json` をダウンロード
+3. Obsidianのプラグインフォルダに新しいディレクトリを作成:
+   - Windows: `%APPDATA%\Obsidian\[ボルト名]\.obsidian\plugins\time-list-sorter\`
+   - macOS: `~/Library/Application Support/obsidian/[ボルト名]/.obsidian/plugins/time-list-sorter/`
+   - Linux: `~/.config/obsidian/[ボルト名]/.obsidian/plugins/time-list-sorter/`
+4. ダウンロードした `main.js` と `manifest.json` をそのフォルダにコピー
+5. Obsidianでプラグインを有効化
+
+### 手動ビルド（開発者向け）
 
 1. このプロジェクトをクローンまたはダウンロード
 2. `npm install` で依存関係をインストール
