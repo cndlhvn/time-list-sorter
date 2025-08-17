@@ -50,12 +50,21 @@
 
 1. [Releases](https://github.com/cndlhvn/time-list-sorter/releases) ページから最新版をダウンロード
 2. リリースページから `main.js` と `manifest.json` をダウンロード
-3. Obsidianのプラグインフォルダに新しいディレクトリを作成:
-   - Windows: `%APPDATA%\Obsidian\[ボルト名]\.obsidian\plugins\time-list-sorter\`
-   - macOS: `~/Library/Application Support/obsidian/[ボルト名]/.obsidian/plugins/time-list-sorter/`
-   - Linux: `~/.config/obsidian/[ボルト名]/.obsidian/plugins/time-list-sorter/`
-4. ダウンロードした `main.js` と `manifest.json` をそのフォルダにコピー
-5. Obsidianでプラグインを有効化
+3. Obsidianプラグインフォルダにインストール:
+   
+   **手順**:
+   - Obsidianでボルト（ノートが保存されているフォルダ）を開く
+   - ボルトフォルダ内の `.obsidian` フォルダを表示（隠しフォルダの場合があります）
+   - `.obsidian` フォルダ内に `plugins` フォルダを作成（存在しない場合）
+   - `plugins` フォルダ内に `time-list-sorter` フォルダを作成
+   
+   **参考パス例**:
+   - Windows: `C:\Users\[ユーザー名]\Documents\[ボルト名]\.obsidian\plugins\time-list-sorter\`
+   - macOS: `~/Documents/[ボルト名]/.obsidian/plugins/time-list-sorter/`
+   - Linux: `~/Documents/[ボルト名]/.obsidian/plugins/time-list-sorter/`
+
+4. ダウンロードした `main.js` と `manifest.json` を `time-list-sorter` フォルダにコピー
+5. Obsidianを再起動してプラグインを有効化
 
 ### 手動ビルド（開発者向け）
 
