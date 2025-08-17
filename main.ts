@@ -20,6 +20,15 @@ export default class TimeListSorterPlugin extends Plugin {
             }
         });
 
+        // ページ全体のリストソート用コマンドを追加
+        this.addCommand({
+            id: 'sort-all-lists-by-time',
+            name: 'ページ内のすべてのリストを時刻順でソート',
+            editorCallback: (editor: Editor) => {
+                this.sortAllListsInPage(editor);
+            }
+        });
+
         // リボンアイコンを追加
         this.addRibbonIcon('clock', '時刻順でリストをソート', () => {
             const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
@@ -111,5 +120,117 @@ export default class TimeListSorterPlugin extends Plugin {
         }
 
         return -1; // 時刻が見つからない場合
+    }
+
+    private sortAllListsInPage(editor: Editor) {
+        const fullText = editor.getValue();
+        const lines = fullText.split('\n');
+
+        // リストグループを検出
+        const listGroups = this.detectListGroups(lines);
+
+        if (listGroups.length === 0) {
+            new Notice('ページ内にリスト項目が見つかりませんでした');
+            return;
+        }
+
+        let totalSortedItems = 0;
+        let processedLines = [...lines];
+
+        // 各リストグループを逆順で処理（インデックスの変更を避けるため）
+        for (let i = listGroups.length - 1; i >= 0; i--) {
+            const group = listGroups[i];
+            const groupLines = lines.slice(group.startIndex, group.endIndex + 1);
+
+            // グループ内のリスト項目を抽出してソート
+            const sortedGroup = this.processListGroup(groupLines);
+
+            if (sortedGroup.sortedItems > 0) {
+                // 元の行を置換
+                processedLines.splice(group.startIndex, group.endIndex - group.startIndex + 1, ...sortedGroup.lines);
+                totalSortedItems += sortedGroup.sortedItems;
+            }
+        }
+
+        // ページ全体を更新
+        editor.setValue(processedLines.join('\n'));
+
+        new Notice(`${listGroups.length}個のリストグループで${totalSortedItems}個の項目を時刻順でソートしました`);
+    }
+
+    private detectListGroups(lines: string[]): Array<{ startIndex: number, endIndex: number }> {
+        const groups: Array<{ startIndex: number, endIndex: number }> = [];
+        let currentGroupStart: number | null = null;
+
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i];
+
+            if (this.isListItem(line)) {
+                // リスト項目を発見
+                if (currentGroupStart === null) {
+                    currentGroupStart = i; // 新しいグループの開始
+                }
+            } else {
+                // リスト項目ではない行
+                if (currentGroupStart !== null) {
+                    // 現在のグループを終了
+                    groups.push({
+                        startIndex: currentGroupStart,
+                        endIndex: i - 1
+                    });
+                    currentGroupStart = null;
+                }
+            }
+        }
+
+        // 最後のグループの処理
+        if (currentGroupStart !== null) {
+            groups.push({
+                startIndex: currentGroupStart,
+                endIndex: lines.length - 1
+            });
+        }
+
+        return groups;
+    }
+
+    private processListGroup(groupLines: string[]): { lines: string[], sortedItems: number } {
+        const listItems: ListItem[] = [];
+        const nonListLines: string[] = [];
+
+        groupLines.forEach((line, index) => {
+            if (this.isListItem(line)) {
+                const timeInMinutes = this.extractTimeInMinutes(line);
+                listItems.push({
+                    line: line,
+                    timeInMinutes: timeInMinutes,
+                    originalIndex: index
+                });
+            } else {
+                nonListLines.push(line);
+            }
+        });
+
+        if (listItems.length === 0) {
+            return { lines: groupLines, sortedItems: 0 };
+        }
+
+        // 時刻でソート（既存のロジックと同じ）
+        listItems.sort((a, b) => {
+            if (a.timeInMinutes === -1 && b.timeInMinutes === -1) {
+                return a.originalIndex - b.originalIndex;
+            }
+            if (a.timeInMinutes === -1) return 1;
+            if (b.timeInMinutes === -1) return -1;
+            return a.timeInMinutes - b.timeInMinutes;
+        });
+
+        // ソートされたリスト項目を返す
+        const sortedLines = listItems.map(item => item.line);
+
+        return {
+            lines: sortedLines,
+            sortedItems: listItems.length
+        };
     }
 }

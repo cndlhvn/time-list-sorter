@@ -1,6 +1,6 @@
 {
     "name": "time-list-sorter",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "Sort list items by time in Obsidian",
     "main": "main.js",
     "scripts": {
