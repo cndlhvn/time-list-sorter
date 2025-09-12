@@ -30,10 +30,10 @@ export default class TimeListSorterPlugin extends Plugin {
         });
 
         // リボンアイコンを追加
-        this.addRibbonIcon('clock', '時刻順でリストをソート', () => {
+        this.addRibbonIcon('clock', 'ページ内のすべてのリストを時刻順でソート', () => {
             const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
             if (activeView) {
-                this.sortSelectedListByTime(activeView.editor);
+                this.sortAllListsInPage(activeView.editor);
             }
         });
     }
